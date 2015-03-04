@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="heap"
-	ProjectGUID="{7FF19244-3538-4BD4-BA51-2E621D213B2A}"
-	RootNamespace="heap"
+	Name="quick_sort"
+	ProjectGUID="{43836BB7-D8E8-49AE-9118-FC61A9001AA2}"
+	RootNamespace="quick_sort"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -18,8 +18,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(SolutionDir)..\..\vspropsheets\configurations\debug.vsprops;$(SolutionDir)..\..\vspropsheets\platforms\x86.vsprops;$(SolutionDir)..\..\vspropsheets\_basic.vsprops;$(SolutionDir)..\..\vspropsheets\type\console.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -40,10 +41,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
+				DebugInformationFormat="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -56,6 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -87,7 +92,6 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\vspropsheets\configurations\debug.vsprops;..\vspropsheets\platforms\x86.vsprops;..\vspropsheets\_basic.vsprops;..\vspropsheets\type\console.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -110,10 +114,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -130,7 +134,7 @@
 				Name="VCLinkerTool"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -167,16 +171,12 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\source\main.cpp"
+				RelativePath=".\source\precompiled.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\source\quick_sort.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
@@ -185,19 +185,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\heapify.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\precompiled.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\targetver.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\utils.h"
 				>
 			</File>
 		</Filter>
