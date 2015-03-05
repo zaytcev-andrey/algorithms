@@ -1,7 +1,7 @@
 #include <heap/include/precompiled.h>
 
 #include <heap/include/heapify.h>
-#include <heap/include/utils.h>
+#include <utils/include/utils.h>
 
 #include <assert.h>
 #include <algorithm>
