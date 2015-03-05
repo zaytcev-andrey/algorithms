@@ -8,7 +8,7 @@
 namespace utils
 {
      template< class T > 
-     inline void print( T array[], size_t len )
+     inline void print( const T array[], size_t len )
      {
           struct show_item
           {

@@ -15,6 +15,12 @@ int _tmain(int argc, _TCHAR* argv[])
      assert( array_size == 10 );
 
      sort::quick_sort( unsorted_array );
+
+     const int sorted_array[] = { 1, 2, 3, 4, 7, 8, 9, 10, 14, 16 };
+
+     bool is_equal = std::equal( unsorted_array
+          , unsorted_array + array_size, sorted_array );
+     assert( is_equal );
      
      return 0;
 }

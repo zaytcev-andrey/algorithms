@@ -29,16 +29,21 @@ namespace sort
 
                // обменять опорный элемент с первым элементом, который больше опорного
                ++less_idx; // индекс первого элемента, который больше опорного
-               assert( less_idx >= 0 && less_idx < arr_size );
+               assert( less_idx >= 0 && less_idx < arr_size ); //?
                
                std::swap( array[ less_idx ], pivot );
 
-               return less_idx;
+               return less_idx ? less_idx : r;
           }
           
           template< class T >
           inline void recursive_quick_sort( T array[], int p, int r, int arr_size )
           {
+               if ( r <= 0 || p >= r )
+               {
+                    return;
+               }
+
                int pivot_idx = partition( array, p, r, arr_size );
 
                recursive_quick_sort( array, p, pivot_idx - 1, arr_size );
