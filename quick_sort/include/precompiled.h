@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <assert.h>
+#include <algorithm>
+#include <stdlib.h>
+#include <time.h>
 
 
 // TODO: reference additional headers your program requires here
