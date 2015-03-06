@@ -1,2 +1,5 @@
 bin/
 temp/
+workspaces/*/*.ncb
+workspaces/*/*.suo
+*.vcproj.*.user
