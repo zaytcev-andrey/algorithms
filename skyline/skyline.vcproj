@@ -199,7 +199,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\skyline.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\triple_building.h"
 				>
 			</File>
 		</Filter>

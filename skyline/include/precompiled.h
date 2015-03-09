@@ -11,6 +11,8 @@
 #include <tchar.h>
 #include <assert.h>
 #include <algorithm>
+#include <utility>
+#include <vector>
 #include <stdlib.h>
 #include <time.h>
 

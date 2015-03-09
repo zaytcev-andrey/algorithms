@@ -3,9 +3,11 @@
 
 #include <skyline/include/precompiled.h>
 
+#include <skyline/include/skyline.h>
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	return 0;
+     std::vector< int > buildings;
+    
+     return 0;
 }
-
