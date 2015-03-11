@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <vector>
 
 namespace utils
 {
@@ -38,9 +39,7 @@ namespace utils
 
      template< class T > 
      inline void print( const T& container )
-     {
-          array::value_type
-          
+     {          
           struct show_item
           {
                void operator() ( const typename T::value_type& item )
