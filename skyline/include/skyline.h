@@ -30,7 +30,44 @@ namespace skyline
 
                while( left_idx < left_len || right_idx < right_len )
                {
-                    if ( current_left < current_right && left_idx < left_len )
+                    if ( left_idx >= left_len && right_idx < right_len )
+                    {
+                         current_height_right = right_skyline[ right_idx + 1 ];
+
+                         res_skyline.push_back( right_skyline[ right_idx ] );                                                  
+                         res_skyline.push_back( current_height_right );
+                         
+                         right_idx += 2;
+
+                         continue;
+                    }
+                    
+                    if ( left_idx < left_len && right_idx >= right_len )
+                    {
+                         current_height_left = left_skyline[ left_idx + 1 ];                         
+
+                         res_skyline.push_back( left_skyline[ left_idx ] );                                                  
+                         res_skyline.push_back( current_height_left );
+
+                         left_idx += 2;
+
+                         continue;
+                    }
+
+                    if ( left_skyline[ left_idx ] == right_skyline[ right_idx ] )
+                    {
+                         res_skyline.push_back( left_skyline[ left_idx ] );
+                         current_height_left = left_skyline[ left_idx + 1 ];
+                         current_height_right = right_skyline[ right_idx + 1 ];                         
+                         res_skyline.push_back( std::max( current_height_left, current_height_right ) );
+
+                         left_idx += 2;
+                         right_idx += 2;
+
+                         continue;
+                    }
+                    
+                    if ( left_skyline[ left_idx ] < right_skyline[ right_idx ] )
                     {    
                          const int prev_height_left = current_height_left;
 
@@ -57,12 +94,8 @@ namespace skyline
                          }
 
                          left_idx += 2;
-                         if ( left_idx < left_len )
-                         {
-                              current_left = left_skyline[ left_idx ];
-                         }
                     }                    
-                    else if ( right_idx < right_len )
+                    else if ( left_skyline[ left_idx ] > right_skyline[ right_idx ] )
                     {
                          const int prev_height_right = current_height_right;
 
@@ -83,67 +116,6 @@ namespace skyline
                          }
 
                          if ( current_height_right == 0 && current_height_left == 0 )
-                         {
-                              res_skyline.push_back( right_skyline[ right_idx ] );                                                  
-                              res_skyline.push_back( 0 );
-                         }
-
-                         right_idx += 2;
-                         if ( right_idx < right_len )
-                         {
-                              current_right = right_skyline[ right_idx ];
-                         }
-                    }
-
-                    continue;
-                    ////////
-                    if ( left_skyline[ left_idx ] > right_skyline[ right_idx ] )
-                    {    
-                         const int prev_height_left = current_height_left;
-
-                         current_height_left = left_skyline[ left_idx + 1 ];
-
-                         if ( current_height_left > current_height_right )
-                         {
-                              res_skyline.push_back( left_skyline[ left_idx ] );                                                  
-                              res_skyline.push_back( current_height_left );
-
-                         }
-
-                         if ( prev_height_left > current_height_right && current_height_left == 0 )
-                         {
-                              res_skyline.push_back( left_skyline[ left_idx ] );                                                  
-                              res_skyline.push_back( current_height_right );
-                         }
-
-                         if ( current_height_right == current_height_left == 0 )
-                         {
-                              res_skyline.push_back( left_skyline[ left_idx ] );                                                  
-                              res_skyline.push_back( 0 );
-                         }
-
-                         left_idx += 2;
-                    }
-                    else
-                    {
-                         const int prev_height_right = current_height_right;
-                         
-                         current_height_right = right_skyline[ right_idx + 1 ];
-
-                         if ( current_height_right > current_height_left )
-                         {
-                              res_skyline.push_back( right_skyline[ right_idx ] );                                                  
-                              res_skyline.push_back( current_height_right );
-
-                         }
-
-                         if ( prev_height_right > current_height_left && current_height_right == 0 )
-                         {
-                              res_skyline.push_back( right_skyline[ right_idx ] );                                                  
-                              res_skyline.push_back( current_height_left );
-                         }
-
-                         if ( current_height_right == current_height_left == 0 )
                          {
                               res_skyline.push_back( right_skyline[ right_idx ] );                                                  
                               res_skyline.push_back( 0 );
@@ -198,7 +170,10 @@ namespace skyline
           std::vector< int > right_skyline;
           make_skyline( right_buildings, right_skyline );
 
-          detail::merge_skyline( left_skyline, right_skyline, skyline_points );
+          std::vector< int > merged_points;
+          detail::merge_skyline( left_skyline, right_skyline, merged_points );
+
+          skyline_points.assign( merged_points.begin(), merged_points.end() );
      }
 }
 
