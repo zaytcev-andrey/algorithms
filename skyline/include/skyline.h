@@ -6,123 +6,225 @@
 #include <vector>
 #include <algorithm>
 #include <assert.h>
+#include <memory>
 #include <utils/include/utils.h>
 
 namespace skyline
 {
      namespace detail
      {
+          enum skyline_order { LEFT, RIGHT, BOTH };
+
+          struct skyline_point
+          {
+               skyline_point( 
+                    int coord
+                    , int height
+                    , skyline_order building )
+                    : coord_( coord )
+                    , height_( height )              
+                    , building_( building )
+                    , left_height_()
+                    , right_height_()
+               {
+               }
+
+               skyline_point( 
+                    int coord
+                    , int left_height
+                    , int right_height )
+                    : coord_( coord )
+                    , height_( left_height >= right_height? left_height : right_height )              
+                    , building_( BOTH )
+                    , left_height_( left_height )
+                    , right_height_( right_height )
+               {
+               }
+               
+               int coord_;
+               int height_;              
+               skyline_order building_;
+
+               int left_height_;
+               int right_height_;
+          };
+
+          class skyline_point_manager
+          {
+          public:
+
+               skyline_point_manager( 
+                    const std::vector< int >& left_skyline,
+                    const std::vector< int >& right_skyline )
+                    : left_skyline_( left_skyline )
+                    , right_skyline_( right_skyline )
+                    , left_len_( left_skyline.size() )
+                    , right_len_( right_skyline.size() )
+                    , left_idx_()
+                    , right_idx_()
+               {                    
+               }
+
+               skyline_point* get_next_point()
+               {                    
+                    if ( left_idx_ >= left_len_ && right_idx_ >= right_len_ )
+                    {                             
+                         return 0;
+                    }
+                    
+                    if ( left_idx_ >= left_len_ && right_idx_ < right_len_ )
+                    {                             
+                         skyline_point* point = new skyline_point(
+                              right_skyline_[ right_idx_ ]
+                              , right_skyline_[ right_idx_ + 1 ] 
+                              , RIGHT );
+
+
+                         right_idx_ += 2;
+
+                         return point;
+                    }
+
+                    if ( left_idx_ < left_len_ && right_idx_ >= right_len_ )
+                    {
+                         skyline_point* point = new skyline_point( 
+                              left_skyline_[ left_idx_ ]
+                              , left_skyline_[ left_idx_ + 1 ] 
+                              , LEFT );
+
+                         left_idx_ += 2;
+
+                         return point;
+                    }
+
+                    if ( left_skyline_[ left_idx_ ] == right_skyline_[ right_idx_ ] )
+                    {                                                 
+                         int height_left = left_skyline_[ left_idx_ + 1 ];
+                         int height_right = right_skyline_[ right_idx_ + 1 ];
+                         
+                         skyline_point* point = new skyline_point(
+                              left_skyline_[ left_idx_ ]
+                              , left_skyline_[ left_idx_ + 1 ] 
+                              , right_skyline_[ right_idx_ + 1 ] );
+
+                         left_idx_ += 2;
+                         right_idx_ += 2;
+
+                         return point;
+                    }
+
+                    if ( left_skyline_[ left_idx_ ] < right_skyline_[ right_idx_ ] )
+                    {    
+                         skyline_point* point = new skyline_point( 
+                              left_skyline_[ left_idx_ ]
+                              , left_skyline_[ left_idx_ + 1 ] 
+                              , LEFT );
+
+                         left_idx_ += 2;
+
+                         return point;
+                    }                    
+                    else if ( left_skyline_[ left_idx_ ] > right_skyline_[ right_idx_ ] )
+                    {
+                         skyline_point* point = new skyline_point( 
+                              right_skyline_[ right_idx_ ]
+                              , right_skyline_[ right_idx_ + 1 ] 
+                              , RIGHT );
+
+                         right_idx_ += 2;
+
+                         return point;
+                    }                   
+
+                    assert( false );
+               }
+
+          private:
+               const std::vector< int >& left_skyline_;
+               const std::vector< int >& right_skyline_;
+               const size_t left_len_;
+               const size_t right_len_;
+               size_t left_idx_;
+               size_t right_idx_;
+          };
+          
           void merge_skyline( const std::vector< int >& left_skyline
                , const std::vector< int >& right_skyline
                , std::vector< int >& res_skyline )
-          {
-               const size_t left_len = left_skyline.size();
-               const size_t right_len = right_skyline.size();
+          {                              
+               skyline_point_manager points_manager( left_skyline, right_skyline );
+
+               int current_left_height = 0;
+               int current_right_height = 0;
                
-               size_t left_idx = 0;
-               size_t right_idx = 0;
-
-               int current_height_left = 0;
-               int current_height_right = 0;
-
-               int current_left = left_skyline[ left_idx ];
-               int current_right = right_skyline[ right_idx ];
-
-               while( left_idx < left_len || right_idx < right_len )
-               {
-                    if ( left_idx >= left_len && right_idx < right_len )
-                    {
-                         current_height_right = right_skyline[ right_idx + 1 ];
-
-                         res_skyline.push_back( right_skyline[ right_idx ] );                                                  
-                         res_skyline.push_back( current_height_right );
-                         
-                         right_idx += 2;
-
-                         continue;
-                    }
+               std::auto_ptr< skyline_point > new_point;
+               new_point.reset( points_manager.get_next_point() );
+               while( new_point.get() )
+               {                    
+                    std::cout << "{ " << new_point->coord_ << ", " <<
+                         new_point->height_ << ", " <<
+                         (new_point->building_ == 0? "LEFT" : "RIGHT") << " }" << std::endl;
                     
-                    if ( left_idx < left_len && right_idx >= right_len )
+                    if ( new_point->building_ == BOTH )
                     {
-                         current_height_left = left_skyline[ left_idx + 1 ];                         
+                         res_skyline.push_back( new_point->coord_ );
+                         res_skyline.push_back( new_point->height_ );
 
-                         res_skyline.push_back( left_skyline[ left_idx ] );                                                  
-                         res_skyline.push_back( current_height_left );
+                         current_left_height = new_point->left_height_;
+                         current_right_height = new_point->right_height_;
+                    }
+                    else if ( new_point->building_ == LEFT )
+                    {
+                         if ( current_right_height == 0 )
+                         {
+                              res_skyline.push_back( new_point->coord_ );
+                              res_skyline.push_back( new_point->height_ );                              
+                         }
+                         else
+                         {
+                              if ( current_right_height > current_left_height && 
+                                   new_point->height_ > current_right_height ) // up
+                              {
+                                   res_skyline.push_back( new_point->coord_ );
+                                   res_skyline.push_back( new_point->height_ );
+                              }
+                              else if ( current_right_height < current_left_height && 
+                                   new_point->height_ < current_right_height ) // down
+                              {
+                                   res_skyline.push_back( new_point->coord_ );
+                                   res_skyline.push_back( current_right_height );
+                              }
+                         }
 
-                         left_idx += 2;
+                         current_left_height = new_point->height_;
+                    }
+                    else if ( new_point->building_ == RIGHT )
+                    {
+                         if ( current_left_height == 0 )
+                         {
+                              res_skyline.push_back( new_point->coord_ );
+                              res_skyline.push_back( new_point->height_ );                              
+                         }
+                         else
+                         {
+                              if ( current_left_height > current_right_height && 
+                                   new_point->height_ > current_left_height ) // up
+                              {
+                                   res_skyline.push_back( new_point->coord_ );
+                                   res_skyline.push_back( new_point->height_ );
+                              }
+                              else if ( current_right_height > current_left_height && 
+                                   new_point->height_ < current_left_height ) // down
+                              {
+                                   res_skyline.push_back( new_point->coord_ );
+                                   res_skyline.push_back( current_left_height );
+                              }
+                         }
 
-                         continue;
+                         current_right_height = new_point->height_;
                     }
 
-                    if ( left_skyline[ left_idx ] == right_skyline[ right_idx ] )
-                    {
-                         res_skyline.push_back( left_skyline[ left_idx ] );
-                         current_height_left = left_skyline[ left_idx + 1 ];
-                         current_height_right = right_skyline[ right_idx + 1 ];                         
-                         res_skyline.push_back( std::max( current_height_left, current_height_right ) );
-
-                         left_idx += 2;
-                         right_idx += 2;
-
-                         continue;
-                    }
-                    
-                    if ( left_skyline[ left_idx ] < right_skyline[ right_idx ] )
-                    {    
-                         const int prev_height_left = current_height_left;
-
-                         current_height_left = left_skyline[ left_idx + 1 ];                         
-                         
-                         if ( current_height_left > current_height_right )
-                         {
-                              res_skyline.push_back( left_skyline[ left_idx ] );                                                  
-                              res_skyline.push_back( current_height_left );
-
-                         }
-
-                         if ( prev_height_left > current_height_right &&
-                              current_height_right != 0 && current_height_left == 0 )
-                         {
-                              res_skyline.push_back( left_skyline[ left_idx ] );                                                  
-                              res_skyline.push_back( current_height_right );
-                         }
-
-                         if ( current_height_right == 0 && current_height_left == 0 )
-                         {
-                              res_skyline.push_back( left_skyline[ left_idx ] );                                                  
-                              res_skyline.push_back( 0 );
-                         }
-
-                         left_idx += 2;
-                    }                    
-                    else if ( left_skyline[ left_idx ] > right_skyline[ right_idx ] )
-                    {
-                         const int prev_height_right = current_height_right;
-
-                         current_height_right = right_skyline[ right_idx + 1 ];
-
-                         if ( current_height_right > current_height_left )
-                         {
-                              res_skyline.push_back( right_skyline[ right_idx ] );                                                  
-                              res_skyline.push_back( current_height_right );
-
-                         }
-
-                         if ( prev_height_right > current_height_left &&
-                              current_height_left != 0 && current_height_right == 0 )
-                         {
-                              res_skyline.push_back( right_skyline[ right_idx ] );                                                  
-                              res_skyline.push_back( current_height_left );
-                         }
-
-                         if ( current_height_right == 0 && current_height_left == 0 )
-                         {
-                              res_skyline.push_back( right_skyline[ right_idx ] );                                                  
-                              res_skyline.push_back( 0 );
-                         }
-
-                         right_idx += 2;
-                    }
+                    new_point.reset( points_manager.get_next_point() );
                }
           }
      }

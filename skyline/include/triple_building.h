@@ -5,11 +5,13 @@ namespace skyline
 {
      namespace detail
      {
-          struct skyline_point
-          {
-               int left_;
-               int height_;
-          };
+/*
+//           struct skyline_point
+//           {
+//                int left_;
+//                int height_;
+//           };
+*/
      }
      
      struct triple_building
