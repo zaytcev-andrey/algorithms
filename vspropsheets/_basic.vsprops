@@ -4,7 +4,7 @@
 	Version="8.00"
 	Name="basic"
 	OutputDirectory="$(MainDir)\bin\$(InternalPlatformName)\$(ConfigurationName)"
-	IntermediateDirectory="$(MainDir)\temp\$(InternalPlatformName)\$(ConfigurationName)"
+	IntermediateDirectory="$(MainDir)\temp\$(InternalPlatformName)\$(ConfigurationName)\$(ProjectName)"
 	>
 	<Tool
 		Name="VCBscMakeTool"

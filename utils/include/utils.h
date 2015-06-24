@@ -50,7 +50,7 @@ namespace utils
 
           std::for_each( container.begin(), container.end(), show_item() );
           std::cout << std::endl;
-     }
+     }        
 
      template< class T, size_t N >
      inline size_t count_of( const T ( & array )[ N ] )
